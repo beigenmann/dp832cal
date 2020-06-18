@@ -29,7 +29,7 @@ class DP832Cal:
 
     stabilization_time_sec = 2
     
-    def __init__(self, psu, dmm):
+    def __init__(self, psu):
         super(DP832Cal, self).__init__()
         
         if psu.identity.instrument_model not in self.known_list:
@@ -39,7 +39,7 @@ class DP832Cal:
         self._manual_current_limit = 10
         
         self._psu = psu
-        self._dmm = dmm
+        #self._dmm = dmm
     
     @property
     def manual_current_limit(self):
@@ -91,7 +91,7 @@ class DP832Cal:
         if unit == 'A':
             ident = 'C'
         
-        manual = False
+        manual = True
 
         for value in values:
             if unit == 'A' and value > self._manual_current_limit and manual == False:
@@ -116,16 +116,16 @@ class DP832Cal:
     def calibrate(self, channels=range(1, 4), update=False):
         print("Calibrating:")
         self._print_instrument(self._psu)
-        print("\nWith:")
-        self._print_instrument(self._dmm)
+      #  print("\nWith:")
+       # self._print_instrument(self._dmm)
         
-        if self._manual_current_limit < 3.2:
-            print()
-            print("WARNING: Currents greater than %.01f A will require alternative DMM and manual entry" % (self._manual_current_limit))
+       # if self._manual_current_limit < 3.2:
+        #    print()
+        #    print("WARNING: Currents greater than %.01f A will require alternative DMM and manual entry" % (self._manual_current_limit))
         
-        print()
-        print("Press Ctrl-C at any time to abort")
-        print()
+        #print()
+        #print("Press Ctrl-C at any time to abort")
+        #print()
         
         # Ensure all channels have a matching calibration date
         now = datetime.date.today().isoformat()
@@ -135,7 +135,7 @@ class DP832Cal:
             
             # Voltage
             self._wait_for_enter("Connect the DMM VOLTAGE inputs to the PSU channel %d" % (channel))
-            self._setup_dmm('dc_volts')
+#            self._setup_dmm('dc_volts')
             
             self._psu._write("CALibration:Start 11111,CH%d" % channel)
             self._psu._write("CALibration:Clear CH%d,ALL" % channel)
@@ -150,7 +150,7 @@ class DP832Cal:
             
             # Current
             self._wait_for_enter("Connect the DMM 10A CURRENT inputs to the PSU channel %d" % (channel))
-            self._setup_dmm('dc_current')
+          #  self._setup_dmm('dc_current')
             
             self._psu.outputs[channel - 1].enabled = 1
             

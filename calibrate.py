@@ -13,8 +13,9 @@ import cal
 # At the time of writing it is experimental and incomplete, but is sufficient
 # for use with this calibration script.
 
-psu = ivi.rigol.rigolDP832("TCPIP0::10.1.0.11::INSTR")
-dmm = ivi.keithley.keithley2000("ASRL::/dev/ttyS2,9600,8n1::INSTR")
+psu = ivi.rigol.rigolDP832("TCPIP0::10.10.0.169::INSTR")
+#dmm = ivi.keithley.keithley2000("ASRL::/dev/ttyS2,9600,8n1::INSTR")
+
 
 ###############################################################################
 # Settings
@@ -64,17 +65,17 @@ def setup_dmm(dmm, function):
 # channels affected will be (probably wildly) off until you either restart or
 # set this to True.
 
-update_calibration = False
+update_calibration = True
 
 ###############################################################################
 # You should not need to change anything below here. Probably.
 ###############################################################################
 
 psu.utility.reset()
-dmm.utility.reset()
+#dmm.utility.reset()
 
 try:
-    calibrator = cal.DP832Cal(psu, dmm)
+    calibrator = cal.DP832Cal(psu)
     calibrator.dmm_setup_callback = setup_dmm
     calibrator.manual_current_limit = manual_entry_over_current
     calibrator.calibrate(calibrate_channels, update_calibration)
